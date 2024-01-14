@@ -44,8 +44,8 @@ function drawList(){
 	var pts = "";
 	var w0l = wl[0].length;
 	
-	if(w0l >= 20) pts = "18px";
-	if(w0l >= 50) pts = "15px";
+	if(w0l >= 20) pts = "36px";
+	if(w0l >= 50) pts = "30px";
 	$stage.game.display.css('font-size', pts);
 	wl[0] = "<label style='color: #FFFF44;'>" + wl[0] + "</label>";
 	$stage.game.display.html(wl.slice(0, lv).join(' '));
@@ -124,6 +124,6 @@ function drawSpeed(table){
 	
 	for(i in table){
 		$("#game-user-" + i + " .game-user-score").empty()
-			.append($("<div>").css({ 'float': "none", 'color': "#4444FF", 'text-align': "center" }).html(table[i] + "<label style='font-size: 11px;'>" + L['kpm'] + "</label>"));
+			.append($("<div>").css({ 'float': "none", 'color': "#4444FF", 'text-align': "center" }).html(table[i] + "<label style='font-size: 16px;'>" + L['kpm'] + "</label>"));
 	}
 }

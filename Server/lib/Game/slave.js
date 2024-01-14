@@ -62,7 +62,7 @@ process.on('uncaughtException', function(err){
 	for(var i in DIC){
 		DIC[i].send('dying');
 	}
-	File.appendFile("../KKUTU_ERROR.log", text, function(res){
+	File.appendFile("~/KKuTu/KKUTU_ERROR.log", text, function(res){ //수정
 		JLog.error(`ERROR OCCURRED! This worker will die in 10 seconds.`);
 		console.log(text);
 	});
@@ -192,6 +192,10 @@ KKuTu.onClientMessage = function($c, msg){
 	if(!msg) return;
 	
 	switch(msg.type){
+		case 'drawingCanvas'://r그림퀴즈
+			$c.drawingCanvas(msg)
+		case 'canvasNotValid':
+			$c.canvasNotValid(msg) // canvas diff not valid
 		case 'yell':
 			if(!msg.value) return;
 			if(!$c.admin) return;

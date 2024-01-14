@@ -20,7 +20,7 @@ mixin Dialog(id, w, h, t, nocls)
 	div.dialog(id=id, style=`width: ${w}px; height: ${h}px;`)
 		div(class=nocls ? 'no-close dialog-head' : 'dialog-head')
 			div.dialog-title(style=`width: ${w - 20}px;`)!= t || ''
-		div.dialog-body(style='font-size: 13px;')
+		div.dialog-body(style='font-size: 18px;')
 			block
 	
 mixin GameOption(key, prefix)
@@ -43,6 +43,8 @@ block Subject
 block JS
 	script(type='text/javascript', src='/js/in_game_kkutu.min.js')
 	script(src='https://www.google.com/recaptcha/api.js')
+	script(type='text/javascript', src='/js/fabric.min.js')
+	script(type='text/javascript', src='/js/diff-match-patch-compressed.js')
 	
 block CSS
 	link(rel='stylesheet', href='/css/in_game_kkutu_shop.css')
@@ -78,6 +80,7 @@ block Middle
 		button#SpectateBtn.for-master.for-normal(style='display: none; background-color: #D19DFF;'): +FA('eye')
 		button#SetRoomBtn.for-master(style='display: none; background-color: #B0D2F3;'): +FA('magic')
 		button#NewRoomBtn.for-lobby(style='display: none; background-color: #8EC0F3;'): +FA('magic')
+		//button#NewRoomBtn.for-lobby(src='/img/makeroom.png'): +FA('magic')
 		button#QuickRoomBtn.for-lobby(style='display: none; background-color: #B0D2F3;'): +FA('bolt')
 		//- button#ShopBtn.for-lobby(style='display: none; background-color: #B3E7B7;'): +FA('shopping-bag')
 		button#DictionaryBtn.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #73D07A;'): +FA('book')
@@ -88,6 +91,7 @@ block Middle
 		button#StartBtn.for-master(style='display: none; background-color: #FFB576;'): +FA('play-circle')
 		button#ExitBtn.for-master.for-normal.for-gaming(style='display: none; background-color: #FFADAD;'): +FA('times')
 		button#ReplayBtn.for-lobby(style='display: none; background-color: #D9FF82;'): +FA('video-camera')
+		button#BulletinBtn.for-lobby(style='display: none; background-color: #FF69B4;')!= L('bulletin')
 		button#LeaderboardBtn.for-lobby(style='display: none; background-color: #FFADD3;'): +FA('trophy')
 	+Dialog('SettingDiag', 300, 240, L('settingsText'))
 		div.dialog-bar
@@ -120,7 +124,7 @@ block Middle
 			button#comm-friend-add= L('friendAdd')
 	+Dialog('LeaderboardDiag', 300, 450, L('leaderboard'))
 		div.dialog-bar(style='height: 350px;'): table#ranking(style='text-align: center;')
-			thead(style='font-weight: bold; background-color: #DDDDDD;'): tr
+			thead(style='font-weight: normal; background-color: #DDDDDD;'): tr
 				td(width=30) #
 				td(width=55)= L('LEVEL')
 				td(width=115)= L('nickname')
@@ -164,7 +168,7 @@ block Middle
 					option(value=Number(i))= L('mode' + locals.MODE[i])
 		div.dialog-bar(style='margin-top: -5px; height: 50px;')
 			h4
-			h4#game-mode-expl.dialog-bar-value(style='width: 100%; font-size: 11px;')
+			h4#game-mode-expl.dialog-bar-value(style='width: 100%; font-size: 16px;')
 		div.dialog-bar
 			h4= L('numRound')
 			input#room-round(type='number', min=1, max=10, step=1, value=5)
@@ -182,7 +186,7 @@ block Middle
 			- for(var i in locals.OPTIONS)
 				+GameOption(i, 'room')
 			div.dialog-opt#room-injpick-panel
-				button#room-injeong-pick(style='font-size: 11px;')= L('pickInjeong')
+				button#room-injeong-pick(style='font-size: 16px;')= L('pickInjeong')
 		div.dialog-bar.tail-button
 			button#room-ok= L('OK')
 	+Dialog('InjPickDiag', 200, 400, L('pickInjeong'))
@@ -280,7 +284,7 @@ block Middle
 			h4(style='width: 83px;')= L('place')
 			h4.dialog-bar-value#profile-place
 		div.dialog-bar.profile-record(style='padding: 2px 0px; border-top: 1px dashed #CCCCCC; margin: 2px 0px; height: 175px; overflow-y: scroll;')
-			div.profile-record-field(style='font-weight: bold; text-align: center;')
+			div.profile-record-field(style='font-weight: normal; text-align: center;')
 				div.profile-field-name= L('gameMode')
 				div.profile-field-record= L('record')
 				div.profile-field-score= L('recordScore')
@@ -311,7 +315,7 @@ block Middle
 			h4= L('pingAfter')
 			h4.dialog-bar-value.purchase-ping#purchase-ping-after
 		div.dialog-bar
-			h4#purchase-item-name(style='width: 100%; font-weight: bold;')
+			h4#purchase-item-name(style='width: 100%; font-weight: normal;')
 		div.dialog-bar
 			h4#purchase-item-desc(style='width: 100%;')
 		div.dialog-bar.tail-button
@@ -328,7 +332,7 @@ block Middle
 		div.dialog-bar.tail-button
 			button#replay-view= L('replayView')
 	+Dialog('ChatLogDiag', 300, 500, L('chatLog'))
-		div#chat-log-board(style='height: 475px; font-size: 11px; overflow-y: scroll;')
+		div#chat-log-board(style='height: 475px; font-size: 16px; overflow-y: scroll;')
 	+Dialog('ObtainDiag', 300, 200, L('notice'), true)
 		div.dialog-bar
 			h4(style='width: 100%;')= L('obtained') + '!'
@@ -357,7 +361,7 @@ block Middle
 			div.b-left.bb(style='display: none;')
 			div.b-left.cwcmd(style='display: none;')
 				div.cw-q-head
-				input#cw-q-input(placeholder=L('inputHere'), style='width: 313px; height: 20px; font-size: 15px;')
+				input#cw-q-input(placeholder=L('inputHere'), style='width: 313px; height: 20px; font-size: 24px;')
 				div.cw-q-body
 			div.jjoriping
 				img.jjoObj.jjoEyeL(src='/img/jjoeyeL.png')
@@ -369,6 +373,45 @@ block Middle
 					+GraphBar('jjo-round-time')
 			div.items
 			div.hints(style='display: none;')
+			div.tools(style='display: none;')
+							div(style="width: 100%")
+								div(style="float: left; width: 35%;")
+									span#themeis= L('themeis')
+								div(style="float: left; width: 65%;")
+									span#themeis-title
+							div(style="width: 100%")
+								div(style="float: left; width: 35%;")
+									span#drawing= L('wordis')
+								div(style="float: left; width: 65%;")
+									span#drawing-title
+							div(style="width: 100%")
+								label(for="drawing-line-width")= L('drawingLineWidth')
+								input#drawing-line-width(type="range", value="1", min="1", max="40")
+							.palette
+								div
+									button.button-color#color-red
+								div
+									button.button-color#color-orange
+								div
+									button.button-color#color-yellow
+								div
+									button.button-color#color-green
+								div
+									button.button-color#color-blue
+								div
+									button.button-color#color-indigo
+								div
+									button.button-color#color-violet
+								div
+									button.button-color#color-black
+								div
+									button.button-color#color-white
+							div(style="width: 100%")
+								div(style="float: left; width: 60%;")
+									label(for="drawing-color")= L('drawingColor')
+									input#drawing-color(type="color", value="#000000")
+								div(style="float: left; width: 40%;")
+									button#drawing-clear= L('drawingClear')
 			div.chain
 			div.rounds
 			div.history-holder

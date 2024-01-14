@@ -38,14 +38,33 @@ var OPTIONS;
 var MAX_LEVEL = 360;
 var TICK = 30;
 var EXP = [];
-var BAD = new RegExp([ "느으*[^가-힣]*금마?", "니[^가-힣]*(엄|앰|엠)", "(ㅄ|ㅅㅂ|ㅂㅅ)", "미친(년|놈)?", "(병|븅|빙)[^가-힣]*신", "보[^가-힣]*지", "(새|섀|쌔|썌)[^가-힣]*(기|끼)", "섹[^가-힣]*스", "(시|씨|쉬|쒸)이*입?[^가-힣]*(발|빨|벌|뻘|팔|펄)", "십[^가-힣]*새", "씹", "(애|에)[^가-힣]*미", "자[^가-힣]*지", "존[^가-힣]*나", "좆|죶", "지랄", "창[^가-힣]*(녀|년|놈)", "fuck", "sex" ].join('|'), "g");
-
+var BAD = new RegExp([
+	"느으*[^가-힣]*금마?", "니[^가-힣]*(엄|앰|엠)", "(ㅄ|ㅅㅂ|ㅂㅅ)", "미친[^가-힣](년|놈|개)?", "(병|븅|빙|등)[^가-힣]*(신|딱)", "보[^가-힣]*지", "(새|섀|쌔|썌)[^가-힣]*(기|끼)", "섹[^가-힣]*스", "(시|씨|쉬|쒸)이*입?[^가-힣]*(발|빨|벌|뻘|팔|펄)", "십[^가-힣]*새", "(애|에)[^가-힣]*미", "자[^가-힣]*지", "(졸|존)[^가-힣]*(나|라|만)","좃|좆|죶", "지랄", "창[^가-힣]*(녀|년|놈)", "개[^가-힣]*(년|녀|쓰레기|스레기|돼지|되지|초딩)", "나가[^가-힝]*(뒤져|디져|죽어)","(닥|닭)[^가-힣]*(쳐|처)", "(또|똘)[^가-힣]*(아이|라이)","빡(통대가리|대가리)", "썩을", "(fuck|뻑큐|뻐큐)", "(부|브|불)[^가-힣]*(알|랄)","씹", "십[^가-힣]*(년|놈)" , "아가리[^가-힣]*?","(엠|엄)[^가-힣]*창","(짱|장)[^가-힣]*(깨|꼴라|궤)","(찐|왕)[^가-힣]*(따|다)", "틀딱", "페[^가-힣]*미", "한남",  "(염|옘)[^가-힣]*병", "sex",
+	"끄[^가-힣]*투[^가-힣]*리[^가-힣]*오",
+	"분[^가-힣]*홍[^가-힣]*끄[^가-힣]*투",
+	"끄[^가-힣]*투[^가-힣]*핑[^가-힣]*크",
+	"끄[^가-힣]*투[^가-힣]*아[^가-힣]*이[^가-힣]*오",
+	"분[^가-힣]*끄",
+	"kkutuio",
+	"kkutu\\.pink",
+	"끄코",
+	"https",
+	"http",
+	"끄투코(2|ㄹ)(ㅣ|1|I|l|i)(0|ㅇ|o)(r|ㅏ)",
+	"끄[^가-힣]*투[^가-힣]*코[^가-힣]*리[^가-힣]*아",
+	"kkutu\\.co\\.kr",
+	"kkutu\\.io",
+	"kkutu\\.pcor\\.me",
+	"(ｐ|p)(c|ㄷ|ⓒ|ｃ|ç|ć|č|ċ)(o|0|ㅇ|@|ｏ|ő|ō|õ|ø|ǒ|ö|ô|ó|ò|o)(r|ㅏ|ｒ|ř)",
+	"플[^가-힣]*러[^가-힣]*스[^가-힣]*끄[^가-힣]*투",
+	"플[^가-힣]끄"
+  ].join('|'), "g");
 var ws, rws;
 var $stage;
 var $sound = {};
 var $_sound = {}; // 현재 재생 중인 것들
 var $data = {};
-var $lib = { Classic: {}, Jaqwi: {}, Crossword: {}, Typing: {}, Hunmin: {}, Daneo: {}, Sock: {} };
+var $lib = { Classic: {}, Jaqwi: {}, Crossword: {}, Typing: {}, Hunmin: {}, Daneo: {}, Sock: {}, Drawing: {} };
 var $rec;
 var mobile;
 
@@ -72,6 +91,8 @@ var _setTimeout = setTimeout;
  */
 
 $(document).ready(function(){
+	window.differ = new diff_match_patch()
+
 	var i;
 	
 	$data.PUBLIC = $("#PUBLIC").html() == "true";
@@ -124,6 +145,7 @@ $(document).ready(function(){
 			exit: $("#ExitBtn"),
 			notice: $("#NoticeBtn"),
 			replay: $("#ReplayBtn"),
+			bulletin: $("#BulletinBtn"),//임시
 			leaderboard: $("#LeaderboardBtn")
 		},
 		dialog: {
@@ -198,6 +220,9 @@ $(document).ready(function(){
 		game: {
 			display: $(".jjo-display"),
 			hints: $(".GameBox .hints"),
+			tools: $('.GameBox .tools'),
+			drawingTitle: $('#drawing-title'),
+			themeisTitle: $('#themeis-title'),
 			cwcmd: $(".GameBox .cwcmd"),
 			bb: $(".GameBox .bb"),
 			items: $(".GameBox .items"),
@@ -318,7 +343,10 @@ $(document).ready(function(){
 	});
 	$data.opts = $.cookie('kks');
 	if($data.opts){
-		applyOptions(JSON.parse($data.opts));
+		var opts = JSON.parse($data.opts);
+		opts.bv = $("#bgm-volume").val();
+		opts.ev = $("#effect-volume").val();
+		applyOptions(opts);
 	}
 	$(".dialog-head .dialog-title").on('mousedown', function(e){
 		var $pd = $(e.currentTarget).parents(".dialog");
@@ -644,6 +672,9 @@ $(document).ready(function(){
 			$("#replay-file").trigger('change');
 		}
 	});
+	$stage.menu.bulletin.on('click', function(e){
+			location.href = "https://cafe.naver.com/playkkutu";
+	}); //임시
 	$stage.menu.leaderboard.on('click', function(e){
 		$data._lbpage = 0;
 		if($stage.dialog.leaderboard.is(":visible")){
@@ -676,8 +707,8 @@ $(document).ready(function(){
 	});
 	$stage.dialog.settingOK.on('click', function(e){
 		applyOptions({
-			mb: $("#mute-bgm").is(":checked"),
-			me: $("#mute-effect").is(":checked"),
+			bv: $("#bgm-volume").val(),
+			ev: $("#effect-volume").val(),
 			di: $("#deny-invite").is(":checked"),
 			dw: $("#deny-whisper").is(":checked"),
 			df: $("#deny-friend").is(":checked"),
@@ -1458,8 +1489,8 @@ function drawList(){
 	var pts = "";
 	var w0l = wl[0].length;
 	
-	if(w0l >= 20) pts = "18px";
-	if(w0l >= 50) pts = "15px";
+	if(w0l >= 20) pts = "36px";
+	if(w0l >= 50) pts = "30px";
 	$stage.game.display.css('font-size', pts);
 	wl[0] = "<label style='color: #FFFF44;'>" + wl[0] + "</label>";
 	$stage.game.display.html(wl.slice(0, lv).join(' '));
@@ -1538,7 +1569,7 @@ function drawSpeed(table){
 	
 	for(i in table){
 		$("#game-user-" + i + " .game-user-score").empty()
-			.append($("<div>").css({ 'float': "none", 'color': "#4444FF", 'text-align': "center" }).html(table[i] + "<label style='font-size: 11px;'>" + L['kpm'] + "</label>"));
+			.append($("<div>").css({ 'float': "none", 'color': "#4444FF", 'text-align': "center" }).html(table[i] + "<label style='font-size: 16px;'>" + L['kpm'] + "</label>"));
 	}
 }
 
@@ -1763,6 +1794,272 @@ $lib.Daneo.turnEnd = function(id, data){
 /**
  * Rule the words! KKuTu Online
  * Copyright (C) 2017 JJoriping(op@jjo.kr)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$lib.Drawing.roundReady = function (data, spec) {
+    var tv = L['jqTheme'] + ': ' + L['theme_' + data.theme]
+  
+    clearBoard()
+    $('.jjoriping,.rounds,.game-body').addClass('cw')
+    $('.jjoriping,.rounds').addClass('dg')
+    $('.game-user-drawing').removeClass('game-user-drawing')
+    $stage.game.tools.hide()
+    $data._relay = false
+    $data._roundTime = $data.room.time * 1000
+    $data._fastTime = 10000
+    $data._fullImageString = ""
+    $stage.game.items.hide()
+    $stage.game.hints.show()
+    $stage.game.cwcmd.show().css('opacity', 0)
+    if ($data.id === data.painter) {
+      console.log('i\'m painter!')
+      $data._isPainter = true
+    } else {
+      $data._isPainter = false
+    }
+    $('#game-user-' + data.painter).addClass('game-user-drawing')
+    drawRound(data.round)
+    playSound('round_start')
+    clearInterval($data._tTime)
+  }
+  $lib.Drawing.turnStart = function (data, spec) {
+    $('.game-user-current').removeClass('game-user-current')
+    $('.game-user-bomb').removeClass('game-user-bomb')
+    if ($data.room.game.seq.indexOf($data.id) >= 0) {
+      if (!$data._isPainter) {
+        $stage.game.hints.show()
+        $stage.game.tools.hide()
+  
+        $data._relay = true
+      } else {
+        $('#drawing-line-width').change(function () {
+          console.log(this.value)
+          $stage.game.canvas.freeDrawingBrush.width = this.value
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('#drawing-color').change(function () {
+          console.log(this.value)
+          $stage.game.canvas.freeDrawingBrush.color = this.value
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('#drawing-clear').click(function () {
+          console.log('clear')
+          $stage.game.canvas.clear()
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-red').click(function() {
+          console.log('change red')
+          $stage.game.canvas.freeDrawingBrush.color = '#FF0000'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-orange').click(function() {
+          console.log('change orange')
+          $stage.game.canvas.freeDrawingBrush.color = '#FFA500'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-yellow').click(function() {
+          console.log('change yellow')
+          $stage.game.canvas.freeDrawingBrush.color = '#FFFF00'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-green').click(function() {
+          console.log('change green')
+          $stage.game.canvas.freeDrawingBrush.color = '#008000'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-blue').click(function() {
+          console.log('change blue')
+          $stage.game.canvas.freeDrawingBrush.color = '#0000FF'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-indigo').click(function() {
+          console.log('change indigo')
+          $stage.game.canvas.freeDrawingBrush.color = '#4B0082'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-violet').click(function() {
+          console.log('change red')
+          $stage.game.canvas.freeDrawingBrush.color = '#9400D3'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-black').click(function() {
+          console.log('change black')
+          $stage.game.canvas.freeDrawingBrush.color = '#000000'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+        $('.button-color#color-white').click(function() {
+          console.log('change white')
+          $stage.game.canvas.freeDrawingBrush.color = '#FFFFFF'
+          var canvasStr = JSON.stringify($stage.game.canvas)
+          send('drawingCanvas', {data: canvasStr}, false)
+        })
+  
+        $stage.game.drawingTitle.text(data.word)
+        $stage.game.themeisTitle.text(L['theme_' + data.theme])
+  
+        $stage.game.hints.hide()
+        $stage.game.tools.show()
+  
+        $('.rounds').removeClass('dg')
+        $('.rounds').addClass('painter')
+      }
+    }
+    $lib.Drawing.drawDisplay()
+    clearInterval($data._tTime)
+    $data._tTime = addInterval(turnGoing, TICK)
+    playBGM('jaqwi')
+  }
+  $lib.Drawing.turnHint = function (data) {
+    var hint
+    if (Array.isArray(data.hint)) {
+      hint = L['theme_' + data.hint[0]]
+    } else {
+      hint = data.hint
+    }
+    playSound('mission')
+    pushHint(hint)
+  }
+  $lib.Drawing.turnEnd = function (id, data) {
+    var $sc = $('<div>').addClass('deltaScore').html('+' + data.score)
+    var $uc = $('#game-user-' + id)
+  
+    if (data.giveup) {
+      $uc.addClass('game-user-bomb')
+      $data._relay = false
+    } else if (data.answer) {
+      $stage.game.here.hide()
+      $stage.game.display.html($('<label>').css('color', '#FFFF44').html(data.answer))
+      stopBGM()
+      playSound('horr')
+      $data._relay = false
+    } else {
+      // if(data.mean) turnHint(data);
+      if (id == $data.id) $stage.game.here.hide()
+      addScore(id, data.score)
+      if ($data._roundTime > 10000) $data._roundTime = 10000
+      drawObtainedScore($uc, $sc)
+      updateScore(id, getScore(id)).addClass('game-user-current')
+      playSound('success')
+    }
+  }
+  $lib.Drawing.drawDisplay = function () {
+    var $pane = $stage.game.display.empty()
+  
+    $pane.append($('<canvas>')
+      .attr('id', 'canvas')
+      .css({
+        width: '300',
+        height: '300',
+        left: 0,
+        top: 0
+      })
+      .addClass('canvas')
+    )
+  
+    var canvas = window._canvas = new fabric.Canvas('canvas')
+    canvas.backgroundColor = '#ffffff'
+    canvas.isDrawingMode = $data._isPainter
+    canvas.setHeight(300)
+    canvas.setWidth(300)
+    canvas.selection = false
+  
+    $('#drawing-line-width').val(20)
+    $('#drawing-color').val('#000000')
+  
+    if ($data._isPainter) {
+      canvas.on('mouse:up', function (e) {
+        // $data._fullImageString -> old canvas data
+        var canvasStr = JSON.stringify(canvas)
+        var diffRes= window.differ.patch_make($data._fullImageString, canvasStr)
+        diffRes = window.differ.patch_toText(diffRes)
+  
+        // { type: "drawingCanvas", diffed: Boolean, data: String }
+        send('drawingCanvas', {diffed: true, data: diffRes}, false)
+        $data._fullImageString = canvasStr
+      })
+    }
+    canvas.renderAll()
+    $stage.game.canvas = canvas
+  }
+  $lib.Drawing.turnGoing = function () {
+    var $rtb = $stage.game.roundBar
+    var bRate
+    var tt
+  
+    if (!$data.room) clearInterval($data._tTime)
+    $data._roundTime -= TICK
+  
+    tt = $data._spectate ? L['stat_spectate'] : ($data._roundTime * 0.001).toFixed(1) + L['SECOND']
+    $rtb
+      .width($data._roundTime / $data.room.time * 0.1 + '%')
+      .html(tt)
+  
+    if (!$rtb.hasClass('round-extreme')) {
+      if ($data._roundTime <= $data._fastTime) {
+        bRate = $data.bgm.currentTime / $data.bgm.duration
+        if ($data.bgm.paused) stopBGM()
+        else playBGM('jaqwiF')
+        $data.bgm.currentTime = $data.bgm.duration * bRate
+        $rtb.addClass('round-extreme')
+      }
+    }
+  }
+  $lib.Drawing.drawCanvas = function (msg) {
+    // { type: "drawCanvas", diffed: Boolean, data: String }
+    if (!$data._isPainter) {
+      var data = ""
+      if(msg.diffed) {
+        var diff = window.differ.patch_fromText(msg.data)
+              var diffResult = window.differ.patch_apply(diff, $data._fullImageString)
+  
+              if(diffResult[1]) {
+                  data = diffResult[0]
+              } else {
+                  send('canvasNotValid', {}, false)
+              }
+      } else {
+        data = msg.data
+      }
+  
+      $stage.game.canvas.clear()
+      $stage.game.canvas.loadFromJSON(data, $stage.game.canvas.renderAll.bind($stage.game.canvas))
+      $data._fullImageString = data
+    }
+  }
+  
+  $lib.Drawing.diffNotValid = function (msg) {
+    // msg -> {}
+    if ($data._isPainter) {
+      send('drawingCanvas', {diffed: false, data: $data._fullImageString}, false)
+    }
+  }
+/**
+ * Rule the words! KKuTu Online
+ * Copyright (C) 2017 JJoriping(op@jjo.kr)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1937,11 +2234,11 @@ function showDialog($d, noToggle){
 function applyOptions(opt){
 	$data.opts = opt;
 	
-	$data.muteBGM = $data.opts.mb;
-	$data.muteEff = $data.opts.me;
+	$data.BGMVolume = parseFloat($data.opts.bv);
+	$data.EffectVolume = parseFloat($data.opts.ev);
 	
-	$("#mute-bgm").attr('checked', $data.muteBGM);
-	$("#mute-effect").attr('checked', $data.muteEff);
+	$("#bgm-volume").val($data.BGMVolume);
+	$("#effect-volume").val($data.EffectVolume);
 	$("#deny-invite").attr('checked', $data.opts.di);
 	$("#deny-whisper").attr('checked', $data.opts.dw);
 	$("#deny-friend").attr('checked', $data.opts.df);
@@ -1951,12 +2248,12 @@ function applyOptions(opt){
 	$("#only-unlock").attr('checked', $data.opts.ou);
 	
 	if($data.bgm){
-		if($data.muteBGM){
+		if($data.BGMVolume){
+			$data.bgm.volume = $data.BGMVolume;
+			$data.bgm = playBGM($data.bgm.key, true);
+		}else{
 			$data.bgm.volume = 0;
 			$data.bgm.stop();
-		}else{
-			$data.bgm.volume = 1;
-			$data.bgm = playBGM($data.bgm.key, true);
 		}
 	}
 }
@@ -2166,6 +2463,15 @@ function onMessage(data){
 				chat(data.profile || { title: L['robot'] }, data.value, data.from, data.timestamp);
 			}
 			break;
+		case 'drawCanvas': //그림퀴즈
+				if ($stage.game.canvas) {
+					drawCanvas(data);
+				}
+				break;
+		case 'diffNotValid': //그림퀴즈
+				if ($stage.game.canvas) {
+					diffNotValid(data);
+				}
 		case 'roomStuck':
 			rws.close();
 			break;
@@ -3795,10 +4101,13 @@ function clearBoard(){
 	$stage.dialog.dress.hide();
 	$stage.dialog.charFactory.hide();
 	$(".jjoriping,.rounds,.game-body").removeClass("cw");
+	$('.jjoriping,.rounds').removeClass('dg')
+	$('.rounds').removeClass('painter')
 	$stage.game.display.empty();
 	$stage.game.chain.hide();
 	$stage.game.hints.empty().hide();
 	$stage.game.cwcmd.hide();
+	$stage.game.tools.hide();
 	$stage.game.bb.hide();
 	$stage.game.round.empty();
 	$stage.game.history.empty();
@@ -3861,6 +4170,7 @@ function roundEnd(result, data){
 	$stage.game.display.html(L['roundEnd']);
 	$data._resultPage = 1;
 	$data._result = null;
+	$data._relay = false
 	for(i in result){
 		r = result[i];
 		if($data._replay){
@@ -4194,7 +4504,7 @@ function pushDisplay(text, mean, theme, wc){
 			
 			$stage.game.display.append($l = $("<div>")
 				.addClass("display-text")
-				.css({ 'float': isRev ? "right" : "left", 'margin-top': -6, 'font-size': 36 })
+				.css({ 'float': isRev ? "right" : "left", 'margin-top': -6, 'font-size': 24 })
 				.hide()
 				.html(isRev ? text.charAt(len - j - 1) : text.charAt(j))
 			);
@@ -4206,9 +4516,9 @@ function pushDisplay(text, mean, theme, wc){
 				if($l.html() == $data.mission){
 					playSound('mission');
 					$l.css({ 'color': "#66FF66" });
-					anim['font-size'] = 24;
+					anim['font-size'] = 48;
 				}else{
-					anim['font-size'] = 20;
+					anim['font-size'] = 40;
 				}
 				$l.show().animate(anim, 100);
 			}, Number(i) * tick, $l, ta);
@@ -4250,8 +4560,8 @@ function pushDisplay(text, mean, theme, wc){
 					else playSound('kung');
 				}
 				(beat ? $stage.game.display.children(".display-text") : $stage.game.display)
-					.css('font-size', 21)
-					.animate({ 'font-size': 20 }, tick);
+					.css('font-size', 30)
+					.animate({ 'font-size': 28 }, tick);
 			}, i * tick * 2, i);
 		}
 		addTimeout(pushHistory, tick * 4, text, mean, theme, wc);
@@ -4420,8 +4730,8 @@ function setRoomHead($obj, room){
 		.append($rm = $("<h5>").addClass("room-head-mode").html(opts.join(" / ")))
 		.append($("<h5>").addClass("room-head-limit").html((mobile ? "" : (L['players'] + " ")) + room.players.length + " / " +room.limit))
 		.append($("<h5>").addClass("room-head-round").html(L['rounds'] + " " + room.round))
-		.append($("<h5>").addClass("room-head-time").html(room.time + L['SECOND']));
-		
+		.append($("<h5>").addClass("room-head-time").html(room.time + L['SECOND']))
+		.append($("<h5>").addClass("room-vendor").html("플레이끄투 playkkutu.site"));
 	if(rule.opts.indexOf("ijp") != -1){
 		$rm.append($("<div>").addClass("expl").html("<h5>" + room.opts.injpick.map(function(item){
 			return L["theme_" + item];
@@ -4484,23 +4794,29 @@ function stopBGM(){
 }
 function playSound(key, loop){
 	var src, sound;
-	var mute = (loop && $data.muteBGM) || (!loop && $data.muteEff);
-	
+	var bgmMuted = loop && $data.BGMVolume == 0;
+	var effectMuted = !loop && $data.EffectVolume == 0;
+
 	sound = $sound[key] || $sound.missing;
 	if(window.hasOwnProperty("AudioBuffer") && sound instanceof AudioBuffer){
+		var gainNode = audioContext.createGain();
 		src = audioContext.createBufferSource();
 		src.startedAt = audioContext.currentTime;
 		src.loop = loop;
-		if(mute){
+		if(bgmMuted || effectMuted){
+			gainNode.gain.value = 0;
 			src.buffer = audioContext.createBuffer(2, sound.length, audioContext.sampleRate);
 		}else{
+			gainNode.gain.value = (loop ? $data.BGMVolume : $data.EffectVolume) || 0.5;
 			src.buffer = sound;
 		}
 		src.connect(audioContext.destination);
+		gainNode.connect(audioContext.destination);
+		src.connect(gainNode);
 	}else{
 		if(sound.readyState) sound.audio.currentTime = 0;
 		sound.audio.loop = loop || false;
-		sound.audio.volume = mute ? 0 : 1;
+		sound.audio.volume = mute ? 0 : ((loop ? $data.BGMVolume : $data.EffectVolume) || 0.5);
 		src = sound;
 	}
 	if($_sound[key]) $_sound[key].stop();
@@ -4542,7 +4858,7 @@ function forkChat(){
 	$stage.chat.scrollTop(999999999);
 }
 function badWords(text){
-	return text.replace(BAD, "♥♥");
+	return text.replace(BAD, "신급");
 }
 function chatBalloon(text, id, flag){
 	$("#cb-" + id).remove();
@@ -4604,10 +4920,16 @@ function chat(profile, msg, from, timestamp){
 	}
 	if(from){
 		if(from !== true) $data._recentFrom = from;
-		$msg.html("<label style='color: #7777FF; font-weight: bold;'>&lt;" + L['whisper'] + "&gt;</label>" + $msg.html());
+		$msg.html("<label style='color: #7777FF; font-weight: normal;'>&lt;" + L['whisper'] + "&gt;</label>" + $msg.html());
 	}
 	addonNickname($bar, { equip: equip });
 	$stage.chat.scrollTop(999999999);
+function drawCanvas (data) {//그림퀴즈
+		route('drawCanvas', data);
+}
+function diffNotValid(data) {
+		route('diffNotValid', data);//그림퀴즈
+}
 }
 function notice(msg, head){
 	var time = new Date();
@@ -4616,7 +4938,7 @@ function notice(msg, head){
 	stackChat();
 	$("#Chat,#chat-log-board").append($("<div>").addClass("chat-item chat-notice")
 		.append($("<div>").addClass("chat-head").text(head || L['notice']))
-		.append($("<div>").addClass("chat-body").html(msg))
+		.append($("<div>").addClass("chat-body").text(msg))
 		.append($("<div>").addClass("chat-stamp").text(time.toLocaleTimeString()))
 	);
 	$stage.chat.scrollTop(999999999);
@@ -4682,7 +5004,7 @@ function iDynImage(group, data){
 	var i;
 	
 	canvas.width = canvas.height = 50;
-	ctx.font = "24px NBGothic";
+	ctx.font = "50px SDMiSaeng";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	switch(group){

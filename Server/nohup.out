@@ -1,0 +1,69 @@
+
+[2024-01-13 18:29:39] Master DB is ready.
+[2024-01-13 18:29:39] << KKuTu Server:null >>
+Master DB is ready.
+[2024-01-13 18:29:40] DB is ready.
+DB is ready.
+<< KKuTu Server:null >>
+[2024-01-13 18:30:42] New web server #1
+New web server #1
+[2024-01-13 18:39:51] Master DB is ready.
+Master DB is ready.
+[2024-01-13 18:39:51] << KKuTu Server:null >>
+[2024-01-13 18:39:52] DB is ready.
+DB is ready.
+<< KKuTu Server:null >>
+[2024-01-13 18:40:27] New web server #1
+New web server #1
+[2024-01-13 18:41:43] New user #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+New user #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:41:46] Chan @0 Msg #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl: {"type":"enter","title":"회원님의 방","password":"","limit":"8","mode":"3","round":"5","time":"60","opts":{"injpick":[],"manner":false,"injeong":false,"mission":false,"loanword":false,"proverb":false,"strict":false,"sami":false,"no2":false,"unlimited":false,"short":false}}
+Chan @0 Msg #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl: {"type":"enter","title":"회원님의 방","password":"","limit":"8","mode":"3","round":"5","time":"60","opts":{"injpick":[],"manner":false,"injeong":false,"mission":false,"loanword":false,"proverb":false,"strict":false,"sami":false,"no2":false,"unlimited":false,"short":false}}
+[2024-01-13 18:41:47] Chan @1 New #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+Chan @1 New #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:41:49] Chan @1 Msg #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl: {"type":"practice","level":"2"}
+Chan @1 Msg #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl: {"type":"practice","level":"2"}
+[2024-01-13 18:42:02] Chan @1 Exit #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:42:02] Exit #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:42:02] Wrong room-go id=100&target=guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+Exit #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+Wrong room-go id=100&target=guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+Chan @1 Exit #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:45:56] New user #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+New user #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:46:01] Exit #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+Exit #guest__xkr-f5-j7yOafdVw_KKSrogjqmn6s8Fl
+[2024-01-13 18:53:54] New user #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+New user #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-13 18:53:57] Chan @0 Msg #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje: {"type":"enter","title":"회원님의 방","password":"","limit":"8","mode":"0","round":"5","time":"60","opts":{"injpick":[],"manner":false,"injeong":false,"mission":false,"loanword":false,"proverb":false,"strict":false,"sami":false,"no2":false,"unlimited":false,"short":false}}
+Chan @0 Msg #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje: {"type":"enter","title":"회원님의 방","password":"","limit":"8","mode":"0","round":"5","time":"60","opts":{"injpick":[],"manner":false,"injeong":false,"mission":false,"loanword":false,"proverb":false,"strict":false,"sami":false,"no2":false,"unlimited":false,"short":false}}
+[2024-01-13 18:53:58] Chan @1 New #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+Chan @1 New #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-13 18:54:06] Exit #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-13 18:54:06] Chan @1 Exit #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-13 18:54:06] Wrong room-go id=101&target=guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+Chan @1 Exit #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+Exit #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+Wrong room-go id=101&target=guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-13 19:24:39] New user #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+New user #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-13 19:24:50] Exit #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+Exit #guest__SCJbSvpprOTxzNvhVOGgNlhIJ96HiDje
+[2024-01-14 08:12:06] New user #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+New user #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+[2024-01-14 08:12:19] Chan @0 Msg #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom: {"type":"enter","title":"회원님의 방","password":"","limit":"8","mode":"3","round":"5","time":"60","opts":{"injpick":[],"manner":false,"injeong":false,"mission":false,"loanword":false,"proverb":false,"strict":false,"sami":false,"no2":false,"unlimited":false,"short":false}}
+Chan @0 Msg #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom: {"type":"enter","title":"회원님의 방","password":"","limit":"8","mode":"3","round":"5","time":"60","opts":{"injpick":[],"manner":false,"injeong":false,"mission":false,"loanword":false,"proverb":false,"strict":false,"sami":false,"no2":false,"unlimited":false,"short":false}}
+[2024-01-14 08:12:19] Chan @1 New #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+Chan @1 New #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+[2024-01-14 08:12:36] Chan @1 Exit #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+[2024-01-14 08:12:36] Exit #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+Exit #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+Chan @1 Exit #guest__yKXzmuvclEGqxQt19c-aSPipTWzE8zom
+[2024-01-15 05:01:17] Master DB is ready.
+Master DB is ready.
+[2024-01-15 05:01:18] << KKuTu Server:null >>
+[2024-01-15 05:01:18] DB is ready.
+<< KKuTu Server:null >>
+DB is ready.
+[2024-01-15 05:02:37] New web server #1
+New web server #1

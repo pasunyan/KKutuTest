@@ -1,3 +1,4 @@
+const { urlencoded } = require('body-parser');
 const config = require('../../sub/auth.json');
 
 module.exports.config = {
@@ -22,9 +23,9 @@ module.exports.strategy = (strategyProcess, MainDB, Ajae) => {
 		$p.id = o.id;
 		$p.name = o.name;
 		$p.title = o.name;
-		$p.image = o.profile.image || 'https://daldal.so/anonymous.png';
-		$p.exordial = o.profile.text || '';
-		
+		$p.image = o.profile && o.profile.image ? o.profile.image : 'https://daldal.so/anonymous.png';
+		$p.exordial = o.profile && o.profile.text ? o.profile.text : '';
+        
 		strategyProcess(req, accessToken, MainDB, $p, done);
     }
 }

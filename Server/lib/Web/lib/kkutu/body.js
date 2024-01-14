@@ -64,11 +64,11 @@ function showDialog($d, noToggle){
 function applyOptions(opt){
 	$data.opts = opt;
 	
-	$data.muteBGM = $data.opts.mb;
-	$data.muteEff = $data.opts.me;
+	$data.BGMVolume = parseFloat($data.opts.bv);
+	$data.EffectVolume = parseFloat($data.opts.ev);
 	
-	$("#mute-bgm").attr('checked', $data.muteBGM);
-	$("#mute-effect").attr('checked', $data.muteEff);
+	$("#bgm-volume").val($data.BGMVolume);
+	$("#effect-volume").val($data.EffectVolume);
 	$("#deny-invite").attr('checked', $data.opts.di);
 	$("#deny-whisper").attr('checked', $data.opts.dw);
 	$("#deny-friend").attr('checked', $data.opts.df);
@@ -78,12 +78,12 @@ function applyOptions(opt){
 	$("#only-unlock").attr('checked', $data.opts.ou);
 	
 	if($data.bgm){
-		if($data.muteBGM){
+		if($data.BGMVolume){
+			$data.bgm.volume = $data.BGMVolume;
+			$data.bgm = playBGM($data.bgm.key, true);
+		}else{
 			$data.bgm.volume = 0;
 			$data.bgm.stop();
-		}else{
-			$data.bgm.volume = 1;
-			$data.bgm = playBGM($data.bgm.key, true);
 		}
 	}
 }
@@ -293,6 +293,15 @@ function onMessage(data){
 				chat(data.profile || { title: L['robot'] }, data.value, data.from, data.timestamp);
 			}
 			break;
+		case 'drawCanvas': //그림퀴즈
+				if ($stage.game.canvas) {
+					drawCanvas(data);
+				}
+				break;
+		case 'diffNotValid': //그림퀴즈
+				if ($stage.game.canvas) {
+					diffNotValid(data);
+				}
 		case 'roomStuck':
 			rws.close();
 			break;
@@ -1922,10 +1931,13 @@ function clearBoard(){
 	$stage.dialog.dress.hide();
 	$stage.dialog.charFactory.hide();
 	$(".jjoriping,.rounds,.game-body").removeClass("cw");
+	$('.jjoriping,.rounds').removeClass('dg')
+	$('.rounds').removeClass('painter')
 	$stage.game.display.empty();
 	$stage.game.chain.hide();
 	$stage.game.hints.empty().hide();
 	$stage.game.cwcmd.hide();
+	$stage.game.tools.hide();
 	$stage.game.bb.hide();
 	$stage.game.round.empty();
 	$stage.game.history.empty();
@@ -1988,6 +2000,7 @@ function roundEnd(result, data){
 	$stage.game.display.html(L['roundEnd']);
 	$data._resultPage = 1;
 	$data._result = null;
+	$data._relay = false
 	for(i in result){
 		r = result[i];
 		if($data._replay){
@@ -2321,7 +2334,7 @@ function pushDisplay(text, mean, theme, wc){
 			
 			$stage.game.display.append($l = $("<div>")
 				.addClass("display-text")
-				.css({ 'float': isRev ? "right" : "left", 'margin-top': -6, 'font-size': 36 })
+				.css({ 'float': isRev ? "right" : "left", 'margin-top': -6, 'font-size': 24 })
 				.hide()
 				.html(isRev ? text.charAt(len - j - 1) : text.charAt(j))
 			);
@@ -2333,9 +2346,9 @@ function pushDisplay(text, mean, theme, wc){
 				if($l.html() == $data.mission){
 					playSound('mission');
 					$l.css({ 'color': "#66FF66" });
-					anim['font-size'] = 24;
+					anim['font-size'] = 48;
 				}else{
-					anim['font-size'] = 20;
+					anim['font-size'] = 40;
 				}
 				$l.show().animate(anim, 100);
 			}, Number(i) * tick, $l, ta);
@@ -2377,8 +2390,8 @@ function pushDisplay(text, mean, theme, wc){
 					else playSound('kung');
 				}
 				(beat ? $stage.game.display.children(".display-text") : $stage.game.display)
-					.css('font-size', 21)
-					.animate({ 'font-size': 20 }, tick);
+					.css('font-size', 30)
+					.animate({ 'font-size': 28 }, tick);
 			}, i * tick * 2, i);
 		}
 		addTimeout(pushHistory, tick * 4, text, mean, theme, wc);
@@ -2547,8 +2560,8 @@ function setRoomHead($obj, room){
 		.append($rm = $("<h5>").addClass("room-head-mode").html(opts.join(" / ")))
 		.append($("<h5>").addClass("room-head-limit").html((mobile ? "" : (L['players'] + " ")) + room.players.length + " / " +room.limit))
 		.append($("<h5>").addClass("room-head-round").html(L['rounds'] + " " + room.round))
-		.append($("<h5>").addClass("room-head-time").html(room.time + L['SECOND']));
-		
+		.append($("<h5>").addClass("room-head-time").html(room.time + L['SECOND']))
+		.append($("<h5>").addClass("room-vendor").html("플레이끄투 playkkutu.site"));
 	if(rule.opts.indexOf("ijp") != -1){
 		$rm.append($("<div>").addClass("expl").html("<h5>" + room.opts.injpick.map(function(item){
 			return L["theme_" + item];
@@ -2611,23 +2624,29 @@ function stopBGM(){
 }
 function playSound(key, loop){
 	var src, sound;
-	var mute = (loop && $data.muteBGM) || (!loop && $data.muteEff);
-	
+	var bgmMuted = loop && $data.BGMVolume == 0;
+	var effectMuted = !loop && $data.EffectVolume == 0;
+
 	sound = $sound[key] || $sound.missing;
 	if(window.hasOwnProperty("AudioBuffer") && sound instanceof AudioBuffer){
+		var gainNode = audioContext.createGain();
 		src = audioContext.createBufferSource();
 		src.startedAt = audioContext.currentTime;
 		src.loop = loop;
-		if(mute){
+		if(bgmMuted || effectMuted){
+			gainNode.gain.value = 0;
 			src.buffer = audioContext.createBuffer(2, sound.length, audioContext.sampleRate);
 		}else{
+			gainNode.gain.value = (loop ? $data.BGMVolume : $data.EffectVolume) || 0.5;
 			src.buffer = sound;
 		}
 		src.connect(audioContext.destination);
+		gainNode.connect(audioContext.destination);
+		src.connect(gainNode);
 	}else{
 		if(sound.readyState) sound.audio.currentTime = 0;
 		sound.audio.loop = loop || false;
-		sound.audio.volume = mute ? 0 : 1;
+		sound.audio.volume = mute ? 0 : ((loop ? $data.BGMVolume : $data.EffectVolume) || 0.5);
 		src = sound;
 	}
 	if($_sound[key]) $_sound[key].stop();
@@ -2669,7 +2688,7 @@ function forkChat(){
 	$stage.chat.scrollTop(999999999);
 }
 function badWords(text){
-	return text.replace(BAD, "♥♥");
+	return text.replace(BAD, "신급");
 }
 function chatBalloon(text, id, flag){
 	$("#cb-" + id).remove();
@@ -2731,10 +2750,16 @@ function chat(profile, msg, from, timestamp){
 	}
 	if(from){
 		if(from !== true) $data._recentFrom = from;
-		$msg.html("<label style='color: #7777FF; font-weight: bold;'>&lt;" + L['whisper'] + "&gt;</label>" + $msg.html());
+		$msg.html("<label style='color: #7777FF; font-weight: normal;'>&lt;" + L['whisper'] + "&gt;</label>" + $msg.html());
 	}
 	addonNickname($bar, { equip: equip });
 	$stage.chat.scrollTop(999999999);
+function drawCanvas (data) {//그림퀴즈
+		route('drawCanvas', data);
+}
+function diffNotValid(data) {
+		route('diffNotValid', data);//그림퀴즈
+}
 }
 function notice(msg, head){
 	var time = new Date();
@@ -2743,7 +2768,7 @@ function notice(msg, head){
 	stackChat();
 	$("#Chat,#chat-log-board").append($("<div>").addClass("chat-item chat-notice")
 		.append($("<div>").addClass("chat-head").text(head || L['notice']))
-		.append($("<div>").addClass("chat-body").html(msg))
+		.append($("<div>").addClass("chat-body").text(msg))
 		.append($("<div>").addClass("chat-stamp").text(time.toLocaleTimeString()))
 	);
 	$stage.chat.scrollTop(999999999);
@@ -2809,7 +2834,7 @@ function iDynImage(group, data){
 	var i;
 	
 	canvas.width = canvas.height = 50;
-	ctx.font = "24px NBGothic";
+	ctx.font = "50px SDMiSaeng";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	switch(group){

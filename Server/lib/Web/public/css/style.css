@@ -17,8 +17,8 @@
  */
 
 @font-face {
-	font-family: 'NBGothic';
-	src: url('../media/NanumBarunGothicLight.woff') format('woff');
+	font-family: 'SDMiSaeng';
+	src: url('../media/SDMiSaeng.woff') format('woff');
 }
 
 body{
@@ -26,7 +26,7 @@ body{
 	padding: 0px;
 	margin: 0px;
 	min-width: 480px;
-	font-family: NBGothic, 돋움;
+	font-family: SDMiSaeng, 돋움;
 }
 a{
 	color: inherit;
@@ -71,7 +71,7 @@ span{
 	border-bottom-right-radius: 5px;
 	width: 100px;
 	height: 18px;
-	font-size: 15px;
+	font-size: 24px;
 	text-align: center;
 	color: #47330D;
 	background-image: url('/img/topbg.png');
@@ -90,7 +90,7 @@ span{
 		float: left;
 		margin-top: 4px;
 		width: 100px;
-		font-size: 13px;
+		font-size: 20px;
 		color: #47330D;
 		cursor: pointer;
 	}
@@ -105,7 +105,7 @@ span{
 	border-bottom-right-radius: 0px;
 	width: 100px;
 	height: 16px;
-	font-size: 13px !important;
+	font-size: 20px !important;
 }
 #quick-search-btn{
 	float: left;
@@ -120,7 +120,7 @@ span{
 	padding: 3px;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
-	font-size: 13px;
+	font-size: 24px;
 	color: #CCCCCC;
 	cursor: pointer;
 	background-color: #222222;
@@ -128,7 +128,7 @@ span{
 }
 	.autocomp-item{ margin: 1px 0px; }
 	.autocomp-item:hover, .autocomp-select{ color: #FFFFFF; background-color: rgba(50, 50, 50, 0.8); }
-#account{ float: right; margin: 1px; font-size: 11px; color: #444444; }
+#account{ float: right; margin: 1px 30px; font-size: 20px; color: #444444; }
 #account-setting{
 	float: left;
 	padding-top: 8px;
@@ -148,7 +148,7 @@ span{
 	margin-top: 30px;
 	color: #111111;
 	text-align: center;
-	font-weight: bold;
+	font-weight: normal;
 	cursor: pointer;
 	z-index: 5;
 }
@@ -202,7 +202,7 @@ span{
 }
 .product-body{
 	padding: 5px 5px 0px 5px;
-	font-size: 13px;
+	font-size: 18px;
 }
 .product-body #Top{ display: none; }
 .product-body #Bottom{ display: none; }
@@ -265,7 +265,7 @@ span{
 	border-radius: 10px;
 	margin: 5px;
 	color: #EEEEEE;
-	font-size: 13px;
+	font-size: 18x;
 	background-color: #232323;
 	background-color: rgba(0, 0, 0, 0.7);
 	z-index: 1;
@@ -291,7 +291,7 @@ span{
 	float: left;
 	width: 1000px;
 	color: #444444;
-	font-size: 11px;
+	font-size: 16px;
 	text-align: center;
 }
 .bottom-legal{
@@ -301,14 +301,14 @@ span{
 	.bottom-legal a{ padding: 0px 5px; }
 .bottom-contact{
 	color: #777777;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 /* 설명 */
 #ExplBox{
 	box-sizing: border-box;
 	position: fixed;
-	font-size: 12px;
+	font-size: 24px;
 	min-width: 100px;
 	padding: 4px;
 	border: 1px solid #777777;
@@ -327,16 +327,16 @@ explcss[yellow]{
 
 /* jjowt */
 h1, h2, h3, h4, h5{ margin: 0px; font-weight: normal; }
-h1{ font-size: 24px; font-weight: bold; margin: 4px; }
-h2{ font-size: 20px; margin: 2px; }
-h3{ font-size: 15px; }
-h4{ font-size: 13px; }
-h5{ font-size: 11px; }
+h1{ font-size: 24px; font-weight: normal; margin: 4px; }
+h2{ font-size: 24px; margin: 2px; }
+h3{ font-size: 24px; }
+h4{ font-size: 18px; }
+h5{ font-size: 16px; }
 code{
 	position: fixed;
 	left: 0px; top: 0px;
 	font-family: Consolas;
-	font-size: 13px;
+	font-size: 18px;
 	color: #CCCCCC;
 	padding: 5px;
 	background-color: rgba(0, 0, 0, 0.5);
