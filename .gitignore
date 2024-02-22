@@ -10,4 +10,6 @@ Server/lib/sub/auth.json
 /Server/lib/Web/public/naver86499ac52daf101b644925ddfe841a71.html
 Server/lib/sub/global.json
 Server/lib/sub/logging.json
+Server/web.out
+Server/nohup.out
 .vscode

@@ -4,7 +4,7 @@
 	"GLOBAL": {
 		"GPL": "<div style='color: #666;'>Rule the words! KKuTu Online Copyright (C) 2022 pasunyan(admin@playkkutu.site)<br>This program comes with ABSOLUTELY NO WARRANTY.<br>This is free software, and you are welcome to redistribute it under certain conditions.<br>For details visit the repository of this software: <a target='_blank' href='https://github.com/pasunyan/KKutuTest'>check</a></div>",
 
-		"CREATOR":	"개발자 블로그",
+		"CREATOR":	"플러스끄투",
 		"HOME":		"FA{home}",
 		"GAMES":	"게임",
 		"GAMES_KKUTU":	"플레이끄투",
@@ -150,7 +150,7 @@
 
 		"websocketUnsupport": "본 게임은 Internet Explorer(10), 크롬(16), 파이어폭스(11), 오페라(12.1), 사파리(6) 이상의 버전에서 지원합니다!<br>브라우저를 업데이트해 주세요.",
 		"dictionarySupport": "사전 정보 제공:<a href='http://stdweb2.korean.go.kr/' target='_blank'>국립국어원 표준국어대사전</a>, <a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a><br><label style='color: #777777;'>WordNet 3.0 Copyright 2006 by Princeton University. All rights reserved.</label>",
-		"sandbox": "샌드박스 :: SDBX",
+		"sandbox": "플레이끄투 지원",
 		"etcSupport": "프리서버 개발 도움:<a href='https://www.pcor.me/' target='_blank'>Plus Platforms</a>",
 		"welcome": "환영합니다.",
 		"welcomeTestServer": "테스트 서버에 접속했습니다. 본 서버는 특별한 공지 없이 폭발하거나 닫힐 수 있습니다.",
